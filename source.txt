@@ -11,7 +11,7 @@ local startlooping = false
 local check;
 --// thread creation
 coroutine.resume(coroutine.create(function()
-    while wait(0.5) and startlooping do
+    while wait(0.1) and startlooping do
         xpcall(function(...)
             --// very simple checks
             --// check for vim, not created by default, most scripts use vim to perform autodive
