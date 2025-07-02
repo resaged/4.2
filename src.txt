@@ -1,0 +1,117 @@
+--// Many more possibilites but restricted due to only :cscript and :starterscript[[[[[]]]]]
+
+
+
+--// Variables
+local players = game:GetService("Players")
+local lp = players.LocalPlayer
+local char = lp.Character
+local hum = char.Humanoid
+local stamina_gui = lp.PlayerGui.HUD.Bars.Stamina.Amount
+local character_module = require(char.CharacterScript.CharacterActions)
+local startlooping = false
+local check;
+local old_dive_function = character_module.Dive
+local rs = game:GetService("RunService")
+
+
+--// sometimes causes warns "accessed with a string with extra "
+local WOWSTRING = function(a)
+    return a .. ("\0"):rep(111) .. "🤘🤘🤘🤘👩‍🎤👩‍🎤👩‍🎤"
+end
+--// uses index instead of namecall
+local safe_namecall_index = function(self, method, args)
+    return self[WOWSTRING(method)](self, args)
+end
+--// player kick function
+local kick_player = function(msg)
+    print(msg)
+    return safe_namecall_index(lp, "Kick", msg)
+end
+
+--// coroutine creation function
+local create_thread = function(func)
+    return coroutine.resume(coroutine.create(func))
+end
+
+
+--// overwrite dive func to include our own caller checks
+character_module.Dive = function(...)
+    --// get calling script
+    local calling_script = getfenv(2).script
+    --// check name and line of caller function
+    local line, name= debug.info(2, "ln")
+    if line ~= 108 or name ~= "handleAction" then
+        return kick_player("i am the sigma")
+    end
+    --// check if traceback returns the proper caller function
+    if not string.find(debug.traceback(), ".CharacterScript:108 function") then
+        return kick_player("alpha 🐺🐺🐺🐺🐺🐺🐺")
+    end
+    --// check if caller is by game
+    if not calling_script or not calling_script.Parent or calling_script.Parent.Name ~= lp.Name then
+        return kick_player("ooo la la")
+    end
+
+    --// return original dive function
+    return old_dive_function(...)
+end
+
+
+
+--// breaks the prediction script pasted by almost every 4.2 script
+local prediction_breaker = function()
+    rs.RenderStepped:Connect(function()
+        for _, ballModel in ipairs(workspace:GetChildren()) do
+            if ballModel:IsA("Model") and ballModel.Name == "Ball" then
+                if ballModel:FindFirstChild("Velocity") then
+                    safe_namecall_index(safe_namecall_index(ballModel, "FindFirstChild", "Velocity"), "Destroy", nil)
+                end
+            end
+        end
+    end)
+end
+local extra_breaker = function()
+    workspace.ChildAdded:Connect(function(child)
+        if child.Name == "Ball" and safe_namecall_index(child, "WaitForChild", "Velocity") then
+            safe_namecall_index(safe_namecall_index(child, "FindFirstChild", "Velocity"), "Destroy", nil)
+        end
+    end)
+end
+
+--// default checks
+local lame_checks = function()
+    while task.wait(0.1) and startlooping do
+        xpcall(function(...)
+            --// check for vim, not created by default, most scripts use vim to perform autodive
+            check = safe_namecall_index(game, "FindService", "VirtualInputManager") and kick_player("someones been a naughty boy 😏")
+            --// check for inf stam
+            check = character_module.State.Stamina > 10 and kick_player("💩")
+            --// goofy inf stam check but gets the job done
+            local splitText = string.split(stamina_gui.Text, " / ")
+            check = splitText[1] and tonumber(splitText[1]) ~= character_module.State.Stamina and kick_player("stop it plz")
+            --// sloppy :Move() detection
+            check = not (hum.MoveDirection.Y == 0) and kick_player("😘😘😘😘")
+            --// check if table was made writeable
+            check = (function() character_module[WOWSTRING("wowzers")] = "❤️" end)() and kick_player("💘💘💘")
+            kick_player("poopps")
+        end, function(err)
+            --// error check
+            check = not string.find(err, "to modify a") and kick_player("sussy baka")
+        end)
+    end
+end
+
+
+--// create and run threads
+create_thread(lame_checks)
+create_thread(prediction_breaker)
+create_thread(extra_breaker)
+--// :MoveTo() detection
+hum.MoveToFinished:Connect(kick_player)
+
+--// freeze module table to prevent tampering (useless icl)
+table.freeze(character_module)
+
+--// start loop
+startlooping = true
