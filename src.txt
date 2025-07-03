@@ -1,4 +1,4 @@
---// Many more possibilites but restricted due to only :cscript and :starterscript[[[[[]]]]]
+--// Many more possibilites but restricted due to only :cscript and :starterscript
 
 
 
@@ -15,7 +15,7 @@ local old_dive_function = character_module.Dive
 local rs = game:GetService("RunService")
 
 
---// sometimes causes warns "accessed with a string with extra "
+
 local WOWSTRING = function(a)
     return a .. ("\0"):rep(111) .. "🤘🤘🤘🤘👩‍🎤👩‍🎤👩‍🎤"
 end
