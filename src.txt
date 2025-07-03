@@ -19,17 +19,16 @@ local rs = game:GetService("RunService")
 local WOWSTRING = function(a)
     return a .. ("\0"):rep(111) .. "🤘🤘🤘🤘👩‍🎤👩‍🎤👩‍🎤"
 end
---// uses index instead of namecall
+
 local safe_namecall_index = function(self, method, args)
     return self[WOWSTRING(method)](self, args)
 end
---// player kick function
+
 local kick_player = function(msg)
     print(msg)
     return safe_namecall_index(lp, "Kick", msg)
 end
 
---// coroutine creation function
 local create_thread = function(func)
     return coroutine.resume(coroutine.create(func))
 end
