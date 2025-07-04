@@ -1,3 +1,4 @@
+--// no impact on gameplay at all
 --// Many more possibilites but restricted due to only :cscript and :starterscript
 --// ran through :starterscript to try and load script before exploiter hooks our funcs
 --// no hookfunction checks here bec this is a stripped version
