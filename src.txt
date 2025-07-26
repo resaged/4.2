@@ -41,11 +41,6 @@ end
 character_module.Dive = function(...)
     --// get calling script
     local calling_script = getfenv(2).script
-    --// check name and line of caller function
-    local line, name= debug.info(2, "ln")
-    if line ~= 108 or name ~= "handleAction" then
-        return kick_player("i am the sigma")
-    end
     --// check if caller is by game
     if not calling_script or not calling_script.Parent or calling_script.Parent.Name ~= lp.Name then
         return kick_player("ooo la la")
