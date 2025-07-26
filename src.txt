@@ -46,10 +46,6 @@ character_module.Dive = function(...)
     if line ~= 108 or name ~= "handleAction" then
         return kick_player("i am the sigma")
     end
-    --// check if traceback returns the proper caller function
-    if not string.find(debug.traceback(), ".CharacterScript:108 function") then
-        return kick_player("alpha 🐺🐺🐺🐺🐺🐺🐺")
-    end
     --// check if caller is by game
     if not calling_script or not calling_script.Parent or calling_script.Parent.Name ~= lp.Name then
         return kick_player("ooo la la")
